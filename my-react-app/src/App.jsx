@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import Expenses from './components/Expenses';
+import Expenses from './components/Expenses/Expenses';
 import NewExpense from './components/NewExpense/NewExpense';
 import './App.css'
 
@@ -12,13 +12,13 @@ const DUMMY_EXPENSES = [
     },
     {
       id: 'id2',
-      date: new Date(2023, 0, 10),
+      date: new Date(2024, 0, 10),
       title: "New jeans",
       price: "99.99"
     },
     {
       id: 'id3',
-      date: new Date(2023, 0, 10),
+      date: new Date(2025, 0, 10),
       title: "New bag",
       price: "139.99"
     }
