@@ -1,19 +1,20 @@
-import './ExpensesList.css';
-import ExpensesItem from './components/ExpenseItem';
+import ExpenseItem from "../ExpenseItem";
+import "./ExpensesList.css";
+
 
 const ExpensesList = (props) => {
+    if (props.expenses.length === 0) {
+        return <p className='expenses-list__fallback'>No expenses found.</p>;
+    }
 
     return(
-        <>
+        <ul className='expenses-list'>
             {
-                props.expenses.lenght === 0 && <p>No expenses found.</p>
-            }
-            {
-                props.expenses.lenght > 0 && props.expenses.map((expense) => {
+                props.expenses.length > 0 && props.expenses.map((expense) => {
                     return <ExpenseItem key={expense.id} data={expense}/>
                 })
             }
-        </>
+        </ul>
     )
 }
 
