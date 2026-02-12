@@ -6,6 +6,7 @@ import "./Expenses.css";
 
 
 const Expenses = (props) => {
+    console.log('Expenses data in Expenses component:', props.expenses);
     const [filteredYear, setFilteredYear] = useState('2024');
 
     const filterYearHandler = (selectedYear) => {
@@ -21,7 +22,7 @@ const Expenses = (props) => {
         <Card className="expenses">
             <ExpensesFilter selected={filteredYear}
             onChangeFilter={filterYearHandler}/>
-            <ExpensesList expenses={filteredExpenses}/>
+            <ExpensesList expenses={filteredExpenses} isLoading={props.isLoading} />
         </Card>
     );
 };

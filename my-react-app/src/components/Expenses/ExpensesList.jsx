@@ -3,6 +3,9 @@ import "./ExpensesList.css";
 
 
 const ExpensesList = (props) => {
+    if (props.isLoading) {
+        return <p className='expenses-list__fallback'><b>Loading expenses...</b></p>;
+    }
     if (props.expenses.length === 0) {
         return <p className='expenses-list__fallback'>No expenses found.</p>;
     }

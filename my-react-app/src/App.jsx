@@ -1,48 +1,69 @@
 import {useState, useEffect} from 'react';
 import Expenses from './components/Expenses/Expenses';
 import NewExpense from './components/NewExpense/NewExpense';
+import Error from './components/UI/Error';
 import './App.css'
 
-const DUMMY_EXPENSES = [
-    {
-      id: 'id1',
-      date: new Date(2023, 0, 10),
-      title: "New book",
-      price: "30.99"
-    },
-    {
-      id: 'id2',
-      date: new Date(2024, 0, 10),
-      title: "New jeans",
-      price: "99.99"
-    },
-    {
-      id: 'id3',
-      date: new Date(2025, 0, 10),
-      title: "New bag",
-      price: "139.99"
-    }
-];
-
 const App = () => {
-  const [expenses, setExpenses] = useState(() => {
-    const expensesFromLS = JSON.parse(localStorage.getItem('expenses'));
-    return expensesFromLS || DUMMY_EXPENSES;
-  });
+  const[isFetching, setIsFetching] = useState(false); 
+  const [expenses, setExpenses] = useState([]);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-  }, [expenses]);
+    const getExpenses = async () => {
+      setIsFetching(true);
+      try {
+        const response = await fetch('http://localhost:3000/expenses');
+        if (!response.ok) {
+          throw new Error('Failed to fetch expenses');
+        }
+        const data = await response.json();
+        setExpenses(data.expenses);
+      } catch (error) {
+        setError(error.message);
+        setShowError(true);
+      }
+      setIsFetching(false);
+    };
+    getExpenses();
+      console.log('Expenses data in App component after useEffect fetch:', expenses);
+  }, []);
+
+  const errorHandler = () => {
+    setError(null);
+    setShowError(false);
+  }
 
   const addExpenseHandler = (expense) => {
-    setExpenses((previousExpenses) => {
-      return [expense, ...previousExpenses];
-    });
+    const AddExpence = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/add-expenses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({expenses: expense}),
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error('Failed to add expense');
+        }
+        setExpenses((previousExpenses) => {
+          return [expense, ...previousExpenses];
+        });
+      } catch (error) {
+        setError(error.message);
+        setShowError(true);
+      }
+    };
+    AddExpence(expense);
   }
   return (
     <div className='App'>
       <NewExpense onAddExpense={addExpenseHandler}></NewExpense>
-      <Expenses expenses={expenses} />
+      {showError && <Error error={error} onConfirm={errorHandler}/>}
+      <Expenses expenses={expenses} isLoading={isFetching}/>
     </div>
   );
 }
