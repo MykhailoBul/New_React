@@ -4,6 +4,8 @@ import express from 'express';
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allow specific HTTP methods
@@ -33,5 +35,5 @@ app.post('/add-expenses', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running: http://localhost:${PORT}`); 
+    console.log(`Server (backend) running: http://localhost:${PORT}`); 
 });
